@@ -1,0 +1,4 @@
+PyQt5==5.15.9
+PyQtWebEngine==5.15.6
+pandas==2.0.3
+beautifulsoup4==4.12.2
