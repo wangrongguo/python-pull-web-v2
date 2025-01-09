@@ -135,7 +135,10 @@ class WebScraperApp(QMainWindow):
         main_widget.setLayout(main_layout)
         
         # 左侧面板（网页预览）
+        left_widget = QWidget()
+        left_widget.setMinimumWidth(int(self.width() * 0.7))  # 设置最小宽度为窗口宽度的80%
         left_panel = QVBoxLayout()
+        left_widget.setLayout(left_panel)
         
         # URL输入栏
         url_layout = QHBoxLayout()
@@ -172,7 +175,10 @@ class WebScraperApp(QMainWindow):
         left_panel.addWidget(self.browser)
         
         # 右侧面板（数据展示）
+        right_widget = QWidget()
+        right_widget.setMinimumWidth(int(self.width() * 0.3))  # 设置最小宽度为窗口宽度的20%
         right_panel = QVBoxLayout()
+        right_widget.setLayout(right_panel)
         
         # 数据展示区域
         self.data_table = QTableWidget()
@@ -205,21 +211,26 @@ class WebScraperApp(QMainWindow):
         right_panel.addWidget(self.data_table)
         
         # 操作按钮
-        btn_layout = QHBoxLayout()
+        btn_layout = QHBoxLayout()  # 改为水平布局
+        btn_layout.setSpacing(8)  # 设置按钮之间的水平间距
+        btn_layout.setContentsMargins(0, 5, 0, 5)  # 设置上下边距
         
         # 设置按钮样式
         button_style = """
             QPushButton {
-                padding: 8px 15px 8px 35px;  /* 左侧增加padding以适应图标 */
+                padding: 6px 18px 6px 6px;  /* 减小内边距 */
                 border: 1px solid #ddd;
                 border-radius: 4px;
                 background-color: white;
-                min-width: 100px;  /* 增加最小宽度 */
-                text-align: left;  /* 文字左对齐 */
-                icon-size: 16px;  /* 设置图标大小 */
+                min-width: 30px;  /* 减小最小宽度 */
+                max-width: 70px;  /* 减小最大宽度 */
+                text-align: center;  /* 文字左对齐 */
+                icon-size: 14px;  /* 稍微减小图标大小 */
+                font-size: 12px;  /* 设置字体大小 */
             }
             QPushButton:hover {
                 background-color: #e6f3ff;
+                border-color: #99ccff;
             }
             QPushButton:pressed {
                 background-color: #cce6ff;
@@ -232,24 +243,33 @@ class WebScraperApp(QMainWindow):
         
         # 相似度设置布局
         similarity_layout = QHBoxLayout()
-        similarity_label = QLabel("相似度阈值:")
+        similarity_layout.setContentsMargins(0, 5, 0, 5)  # 设置布局边距
+        similarity_label = QLabel("相似度:")  # 缩短标签文本
+        similarity_label.setStyleSheet("font-size: 12px;")  # 设置字体大小
         similarity_layout.addWidget(similarity_label)
         
         self.similarity_input = QLineEdit()
         self.similarity_input.setPlaceholderText("0.67")
         self.similarity_input.setText("0.67")  # 默认值
-        self.similarity_input.setMaximumWidth(60)
+        self.similarity_input.setMaximumWidth(45)  # 减小输入框宽度
         self.similarity_input.setStyleSheet("""
             QLineEdit {
-                padding: 5px;
+                padding: 4px;
                 border: 1px solid #ddd;
                 border-radius: 4px;
+                font-size: 12px;
+            }
+            QLineEdit:focus {
+                border-color: #99ccff;
             }
         """)
         similarity_layout.addWidget(self.similarity_input)
+        similarity_layout.addStretch()  # 添加弹性空间
         
         right_panel.addLayout(similarity_layout)
+        right_panel.addSpacing(5)  # 减小垂直间距
         
+        # 创建按钮并添加到布局
         self.select_btn = QPushButton("选择模式")
         self.select_btn.setIcon(QIcon('images/icon_select.png'))
         self.select_btn.setCheckable(True)
@@ -263,7 +283,7 @@ class WebScraperApp(QMainWindow):
         self.match_btn.clicked.connect(self.match_elements)
         btn_layout.addWidget(self.match_btn)
         
-        self.save_btn = QPushButton("保存数据")
+        self.save_btn = QPushButton("保存")  # 缩短按钮文本
         self.save_btn.setIcon(QIcon('images/icon_save.png'))
         self.save_btn.setStyleSheet(button_style)
         self.save_btn.clicked.connect(self.save_data)
@@ -291,9 +311,11 @@ class WebScraperApp(QMainWindow):
         self.status_bar.setWordWrap(True)  # 允许文本换行
         right_panel.addWidget(self.status_bar)
         
-        # 组合左右面板
-        main_layout.addLayout(left_panel, 2)
-        main_layout.addLayout(right_panel, 1)
+        # 添加左右面板到主布局
+        main_layout.addWidget(left_widget, 8)  # 设置比例为8
+        main_layout.addWidget(right_widget, 2)  # 设置比例为2
+        main_layout.setSpacing(10)  # 设置面板间距
+        main_layout.setContentsMargins(10, 10, 10, 10)  # 设置外边距
         
     def load_url(self):
         url = self.url_input.text()
